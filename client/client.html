@@ -36,6 +36,9 @@
   <link rel="stylesheet" type="text/css" href="/style.css">
   
   <script src="https://cdnjs.cloudflare.com/ajax/libs/babel-core/5.8.34/browser.min.js"></script>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-BmbxuPwQa2lc/FVzBcNJ7UAyJxM6wuqIj61tLrc4wSX0szH/Ev+nYRRuWlolflfl" crossorigin="anonymous">
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta2/dist/js/bootstrap.bundle.min.js" integrity="sha384-b5kHyXgcpbZJO/tY9Ul7kGkf1S0CWuKcCD38l8YkeH8z8QjE0GmW1gYU5S9FOnJ0" crossorigin="anonymous"></script>
+
   <script type="text/babel">
   //parses json into viewable text
   //will be changed to handle card creation according to tasks added
@@ -65,7 +68,30 @@
           content.innerHTML = '<b>Success!</b>'
           break;
         case 201:
-          content.innerHTML = '<b>Create</b>'
+          content.innerHTML = '<b>Task Created</b>'
+          const container = document.getElementById('cardHolder');
+    
+        const card = document.createElement('div');
+        card.classList = 'card-body';
+        // Construct card content
+        const cardContent = `
+          <div class="card">
+          <div class="card-header" id="heading-${taskField.value}">
+            <h5>Task Name: ${taskField.value}</h5>
+          </div>
+        
+          <div id="collapse-temp1" class="collapse show" aria-labelledby="heading-temp1" data-parent="#accordion">
+            <div class="card-body">
+              <p>Description: </b>
+                ${descriptionField.value}</p>
+              <p>Start Date: ${dateField.value}</p>
+            </div>
+          </div>
+        </div>
+        `;
+      
+        // Append newyly created card element to the container
+        container.innerHTML += cardContent;
           break;
         case 204:
           content.innerHTML = '<b>Updated (No Content)</b>'
@@ -91,7 +117,7 @@
       const taskMethod = taskForm.getAttribute('method');
 
       const taskField = taskForm.querySelector('#taskField');
-      const ageField = taskForm.querySelector('#descriptionField');
+      const descriptionField = taskForm.querySelector('#descriptionField');
 
       const xhr = new XMLHttpRequest();
       xhr.open(taskMethod, taskAction);
@@ -99,11 +125,10 @@
       xhr.setRequestHeader('Accept', 'application/json');
       xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
 
-      //xhr.onload = () => handleResponse(xhr, false);
       xhr.onload = () => handleResponse(xhr);
       const formData = `task=${taskField.value}&description=${descriptionField.value}&date=${dateField.value}`;
       xhr.send(formData);
-
+      
       return false; //prevent bubbling
     };
     //GET requests
@@ -116,11 +141,7 @@
 
       xhr.setRequestHeader('Accept', 'application/json');
 
-      //if(method === 'get'){
-      //  xhr.onload = () => handleResponse(xhr, true);
-      //} else{
-      //  xhr.onload = () => handleResponse(xhr, false);
-      //}
+
       xhr.onload = () => handleResponse(xhr);
 
       xhr.send(); 
@@ -142,8 +163,11 @@
       const getUsers = (e) => requestUpdate(e, userForm);
       
       userForm.addEventListener('submit', getUsers);
+
     };
 
+    /* Check this out for card creation in JS
+  https://stackoverflow.com/questions/54706080/generating-dynamic-html-cards-from-a-javascript-array */
     window.onload = init;
 
   </script>
@@ -155,26 +179,18 @@
     <div>
       <h3 class="float-md-start mb-0">ToDo(er)</h3>
       <nav class="nav nav-masthead justify-content-center float-md-end">
-        <a class="nav-link active" aria-current="page" href="#">Home</a>
-        <a class="nav-link" href="#">Features</a>
-        <a class="nav-link" href="#">Contact</a>
+       
       </nav>
     </div>
   </header>
 
   <main class="px-3">
-    <h1>Add a Task</h1>
-    <form id="taskForm" action="/addUser" method="post">
-      <label for="task">Task: </label>
-      <input id="taskField" type="text" name="task" />
-      <label for="date">Due Date:</label>
-      <input type="date" id="dateField" name="date"><br>
-      <label for="description">Description: </label> <br>
-      <textarea id="descriptionField" name="description" rows="4" cols ="50">
-        Sample text here
-      </textarea>
-      <input type="submit" value="Add Task" />
-    </form>
+    <section id="content">
+    </section>
+    <div id="taskCards">
+      <h1 style="text-align: center">TASK LIST:</h1>
+      <div class="container" id="cardHolder">
+      </div>
     <!---UPDATE NAMES TO APPROPRIATE -->
     <form id="userForm" action="/getUsers" method="get">
       <select id='urlField'>
@@ -191,23 +207,33 @@
   </main>
 
   <footer class="mt-auto text-white-50">
-    <p>Cover template for <a href="https://getbootstrap.com/" class="text-white">Bootstrap</a>, by <a href="https://twitter.com/mdo" class="text-white">@mdo</a>.</p>
+    <p>TONY WENG 2021 ©</p>
   </footer>
 </div>
-  <section id="top">
-    
-  </section>
-  <section id="content">
-  </section>
   <!--WILL MAKE RESPONSIVE TO USER SIZE-->
-  <div id="taskCards">
-    <h1 style="text-align: center">TASK LIST:</h1>
-    <div class="card">
-      <div class="container">
-        <h4 id="cardTaskName">Sample</h4>
-        <p id="cardTaskDescription">Description</p>
-      </div>
+    <div id ="addTaskTab">
+      <h1>Add a Task</h1>
+      <form id="taskForm" action="/addUser" method="post">
+        <div id ="taskDiv">
+          <label for="task">Task: </label>
+          <input id="taskField" type="text" name="task" />
+        </div>
+        <div id="dateDiv">
+          <label for="date">Due Date:</label>
+          <input type="date" id="dateField" name="date"><br>
+        </div>
+       <div id="descriptionDiv">
+        <label for="description">Description: </label> <br>
+        <textarea id="descriptionField" name="description" rows="4" cols ="50">
+          Sample text here
+        </textarea>
+       </div>
+        
+        <input type="submit" value="Add Task" id="addTaskButton" />
+      </form>
     </div>
+  
+  
   </div>
   
 </body>

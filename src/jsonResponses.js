@@ -74,12 +74,12 @@ const addUser = (request, response, body) => {
   }
   return respondJSONMeta(request, response, responseCode);
 };
-/* Check this out for card creation in JS
-https://stackoverflow.com/questions/54706080/generating-dynamic-html-cards-from-a-javascript-array */
+
 module.exports = {
   getUsers,
   getUsersMeta,
   notReal,
   notRealMeta,
   addUser,
+  users,
 };
