@@ -69,29 +69,30 @@
           break;
         case 201:
           content.innerHTML = '<b>Task Created</b>'
+          //card creation code credit:
+          //https://stackoverflow.com/questions/54706080/generating-dynamic-html-cards-from-a-javascript-array
           const container = document.getElementById('cardHolder');
-    
-        const card = document.createElement('div');
-        card.classList = 'card-body';
-        // Construct card content
-        const cardContent = `
-          <div class="card">
-          <div class="card-header" id="heading-${taskField.value}">
-            <h5>Task Name: ${taskField.value}</h5>
-          </div>
-        
-          <div id="collapse-temp1" class="collapse show" aria-labelledby="heading-temp1" data-parent="#accordion">
-            <div class="card-body">
-              <p>Description: </b>
-                ${descriptionField.value}</p>
-              <p>Start Date: ${dateField.value}</p>
+          const card = document.createElement('div');
+          card.classList = 'card-body';
+          // Construct card content
+          const cardContent = `
+            <div class="card">
+            <div class="card-header" id="heading-${taskField.value}">
+              <h5>Task Name: ${taskField.value}</h5>
+            </div>
+          
+            <div id="collapse-temp1" class="collapse show" aria-labelledby="heading-temp1" data-parent="#accordion">
+              <div class="card-body">
+                <p>Description: </b>
+                  ${descriptionField.value}</p>
+                <p>Start Date: ${dateField.value}</p>
+              </div>
             </div>
           </div>
-        </div>
-        `;
-      
-        // Append newyly created card element to the container
-        container.innerHTML += cardContent;
+          `;
+        
+          // Append newyly created card element to the container
+          container.innerHTML += cardContent;
           break;
         case 204:
           content.innerHTML = '<b>Updated (No Content)</b>'
